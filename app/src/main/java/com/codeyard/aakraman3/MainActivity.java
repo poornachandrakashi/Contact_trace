@@ -1,105 +1,112 @@
 package com.codeyard.aakraman3;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.widget.Button;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
+
+import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private final static int REQUEST_ENABLE_BT = 1;
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    BluetoothManager btManager;
-    BluetoothAdapter btAdapter;
-    BluetoothLeScanner btScanner;
-    Button startScanningButton;
-    Button stopScanningButton;
-    TextView peripheralTextView;
-    // Device scan callback.
-    private ScanCallback leScanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            peripheralTextView.append("Device Name: " + result.getDevice().getName() + " rssi: " + result.getRssi() + "\n");
 
-            // auto scroll for text view
-            final int scrollAmount = peripheralTextView.getLayout().getLineTop(peripheralTextView.getLineCount()) - peripheralTextView.getHeight();
-            // if there is no need to scroll, scrollAmount will be <=0
-            if (scrollAmount > 0)
-                peripheralTextView.scrollTo(0, scrollAmount);
+    final int REQUEST_ENABLE_BT = 2;
+    final String USER_ID = "USER_ID";
+    Context context;
+    String TAG = MainActivity.class.getName();
+
+    BluetoothAdapter bluetoothAdapter;
+
+    String userId;
+    SharedPreferences sharedPreferences;
+
+    TextView userIDTextView;
+
+    public static String randomString(int len) {
+        final String DATA = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        Random RANDOM = new Random();
+        StringBuilder sb = new StringBuilder(len);
+
+        for (int i = 0; i < len; i++) {
+            sb.append(DATA.charAt(RANDOM.nextInt(DATA.length())));
         }
-    };
+
+        return sb.toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        peripheralTextView = findViewById(R.id.userIDTextView);
-        peripheralTextView.setMovementMethod(new ScrollingMovementMethod());
+        context = MainActivity.this;
 
-        startScanningButton = findViewById(R.id.startButton);
-        startScanningButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startScanning();
-            }
-        });
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
-        stopScanningButton = findViewById(R.id.stopButton);
-        stopScanningButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                stopScanning();
-            }
-        });
-        stopScanningButton.setVisibility(View.INVISIBLE);
+        userIDTextView = findViewById(R.id.userID);
+        userIDTextView.setText("NO USER ID FOUND");
 
-        btManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        btAdapter = btManager.getAdapter();
-        btScanner = btAdapter.getBluetoothLeScanner();
-
-
-        if (btAdapter != null && !btAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        if (!BluetoothUtils.isBluetoothAvailable()) {
+            Log.d(TAG, "onCreate: BL not avail");
+//            TODO make it a dialog
+        }
+        if (!BluetoothUtils.isBLEAvaialble(context)) {
+            Log.d(TAG, "onCreate: BLE not avail");
+//            TODO make if a dialog
         }
 
+        bluetoothAdapter = BluetoothUtils.getBluetoothAdapter();
+
+        if (!BluetoothUtils.isBluetoothEnabled(bluetoothAdapter)) {
+            enableBluetooth();
+        }
+
+//        get the id and then store it.
+
+
+        userId = getUserId();
+        if (userId.equals("")) {
+//            TODO prompt user for login once that is figured otu
+//            for now ;ets give a rand id
+            userId = randomString(10);
+
+            setUserID(userId);
+        }
+        userIDTextView.setText(userId);
+        BluetoothUtils.setBluetoothName(bluetoothAdapter, userId);
 
     }
 
-
-    public void startScanning() {
-        System.out.println("start scanning");
-        peripheralTextView.setText("");
-        startScanningButton.setVisibility(View.INVISIBLE);
-        stopScanningButton.setVisibility(View.VISIBLE);
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                btScanner.startScan(leScanCallback);
-            }
-        });
+    public void setUserID(String userId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USER_ID, userId);
+        editor.apply();
     }
 
-    public void stopScanning() {
-        System.out.println("stopping scanning");
-        peripheralTextView.append("Stopped Scanning");
-        startScanningButton.setVisibility(View.VISIBLE);
-        stopScanningButton.setVisibility(View.INVISIBLE);
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                btScanner.stopScan(leScanCallback);
+    public void enableBluetooth() {
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_CANCELED) {
+                Log.d(TAG, "onActivityResult: user not turn bl on");
+//                TODO make a alert
+                finish();
             }
-        });
+        }
+    }
+
+    public String getUserId() {
+        return sharedPreferences.getString(USER_ID, "");
     }
 }
 
