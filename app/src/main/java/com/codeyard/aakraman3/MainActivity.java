@@ -1,8 +1,11 @@
 package com.codeyard.aakraman3;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,16 +18,37 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    final static String USER_ID = "USER_ID";
     final int REQUEST_ENABLE_BT = 2;
-    final String USER_ID = "USER_ID";
     Context context;
     String TAG = MainActivity.class.getName();
 
     BluetoothAdapter bluetoothAdapter;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            // When discovery finds a device
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                Called every time new device is scanned
+                //TODO send the data to server or to local db
+//                Contact @poorna for info
+                BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_NAME);
+                Log.d(TAG, "onReceive: " + bluetoothDevice.getName());
+
+
+            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Log.v(TAG, "Entered the Finished ");
+                bluetoothAdapter.startDiscovery();
+            }
+        }
+    };
+
+
 
     String userId;
     SharedPreferences sharedPreferences;
-
     TextView userIDTextView;
 
     public static String randomString(int len) {
@@ -79,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
         }
         userIDTextView.setText(userId);
         BluetoothUtils.setBluetoothName(bluetoothAdapter, userId);
+
+//         Register for broadcasts when a device is discovered
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        this.registerReceiver(mReceiver, filter);
+
 
     }
 
