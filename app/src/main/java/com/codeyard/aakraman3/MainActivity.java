@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     String TAG = MainActivity.class.getName();
 
+    TextView deviceList;
+
     BluetoothAdapter bluetoothAdapter;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -31,11 +34,13 @@ public class MainActivity extends AppCompatActivity {
 
             // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-//                Called every time new device is scanned
+                //Called every time new device is scanned
                 //TODO send the data to server or to local db
-//                Contact @poorna for info
+                //Contact @poorna for info
                 BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_NAME);
                 Log.d(TAG, "onReceive: " + bluetoothDevice.getName());
+                deviceList.append("|");
+                deviceList.append(bluetoothDevice.getName());
 
 
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
@@ -45,12 +50,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
-
     String userId;
     SharedPreferences sharedPreferences;
     TextView userIDTextView;
 
+    //    TODO rmeove once server added
     public static String randomString(int len) {
         final String DATA = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         Random RANDOM = new Random();
@@ -61,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return sb.toString();
+    }
+
+    public void sendToServer(String myId, String otherId) {
+//        TODO get current timestamp
+//TODO check internet
+//TODO if offline store to local db
+
+
     }
 
     @Override
@@ -75,13 +87,16 @@ public class MainActivity extends AppCompatActivity {
         userIDTextView = findViewById(R.id.userID);
         userIDTextView.setText("NO USER ID FOUND");
 
+        deviceList = findViewById(R.id.deviceList);
+        deviceList.setText("NO USERS FOUND");
+
         if (!BluetoothUtils.isBluetoothAvailable()) {
             Log.d(TAG, "onCreate: BL not avail");
-//            TODO make it a dialog
+            showAlert(createAlert("Bluetooth is not supported on your Android Device"));
         }
         if (!BluetoothUtils.isBLEAvaialble(context)) {
             Log.d(TAG, "onCreate: BLE not avail");
-//            TODO make if a dialog
+            showAlert(createAlert("BLE is not supported on you Android device"));
         }
 
         bluetoothAdapter = BluetoothUtils.getBluetoothAdapter();
@@ -91,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 //        get the id and then store it.
-
-
         userId = getUserId();
         if (userId.equals("")) {
 //            TODO prompt user for login once that is figured otu
@@ -103,12 +116,15 @@ public class MainActivity extends AppCompatActivity {
         }
         userIDTextView.setText(userId);
         BluetoothUtils.setBluetoothName(bluetoothAdapter, userId);
+        registerBroadcastReciever();
 
-//         Register for broadcasts when a device is discovered
+
+    }
+
+    public void registerBroadcastReciever() {
+        //         Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(mReceiver, filter);
-
-
     }
 
     public void setUserID(String userId) {
@@ -136,6 +152,17 @@ public class MainActivity extends AppCompatActivity {
 
     public String getUserId() {
         return sharedPreferences.getString(USER_ID, "");
+    }
+
+    public AlertDialog.Builder createAlert(String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage(message);
+        return alertDialogBuilder;
+    }
+
+    public void showAlert(AlertDialog.Builder alertDialogBuilder) {
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
 
