@@ -1,10 +1,10 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.models;
 
 public class BLEDevice {
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    public String name;
-    public int rssi;
-    public String scanRecord;
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    public final String name;
+    public final int rssi;
+    public final String scanRecord;
 
 
     public BLEDevice(String name, int rssi, byte[] scanRecord) {
@@ -13,7 +13,7 @@ public class BLEDevice {
         this.scanRecord = BLEDevice.bytesToHex(scanRecord);
     }
 
-    public static String bytesToHex(byte[] bytes) {
+    private static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;  //byte to into

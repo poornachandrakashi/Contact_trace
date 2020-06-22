@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Aakraman3</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="title_devices">BLE Device Scan</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+
+    <!-- Menu items -->
+    <string name="Scanning">Scanning</string>
+    <string name="StartScan">Start Scan</string>
+    <string name="bledevice">BLEDevice</string>
+    <string name="rssi">RSSI</string>
+    <string name="record">Record</string>
+    <string name="local_service_stopped">broadcast service stopped</string>
+    <string name="local_service_started">broadcast service started</string>
+    <string name="local_service_label">broadcast service notification</string>
+    <string name="no_data_available">no_data_available</string>
 </resources>

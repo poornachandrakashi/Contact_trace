@@ -7,18 +7,38 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Random;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
-    static String USER_ID;
-    final int REQUEST_ENABLE_BT = 2;
+    private static final String USER_ID = "USER_ID";
+    private final int REQUEST_ENABLE_BT = 2;
     final String TAG = MainActivity.class.getName();
-    Context context;
-    BluetoothAdapter bluetoothAdapter;
-    SharedPreferences sharedPreferences;
+    private Context context;
+    private BluetoothAdapter bluetoothAdapter;
+    private SharedPreferences sharedPreferences;
+    private String userID = "";
+
+    //View
+    private TextView userIDTeztView;
+
+    private static String random(int len) {
+        Random generator = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+        int randomLength = generator.nextInt(len);
+        char tempChar;
+        for (int i = 0; i < randomLength; i++) {
+            tempChar = (char) (generator.nextInt(96) + 32);
+            randomStringBuilder.append(tempChar);
+        }
+        return randomStringBuilder.toString();
+    }
 
     @Override
     public void onCreate(Bundle saved) {
@@ -26,9 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(saved);
 
         setContentView(R.layout.activity_main);
-
         context = MainActivity.this;
-
+        userIDTeztView = findViewById(R.id.userID);
         if (BluetoothUtils.isBluetoothAvailable()) {
             Toast.makeText(context, "BL not acail", Toast.LENGTH_SHORT).show();
         }
@@ -45,24 +64,33 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
+        userID = getUserId();
+        if (userID.equals("")) {
+//            For now genreate random
+            userID = random(12);
+            setUserID(userID);
+        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragHolder, new ScanListFragment());
+        ft.commit();
+
+
     }
 
-
-    public void setUserID(String userId) {
+    private void setUserID(String userId) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USER_ID, userId);
         editor.apply();
     }
 
     //
-    public void enableBluetooth() {
+    private void enableBluetooth() {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
     }
 
 
-
-    public String getUserId() {
+    private String getUserId() {
         return sharedPreferences.getString(USER_ID, "");
     }
 
@@ -103,9 +131,6 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+
 }
 

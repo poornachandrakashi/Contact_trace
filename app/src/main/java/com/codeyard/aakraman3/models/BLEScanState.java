@@ -1,4 +1,4 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.models;
 
 public class BLEScanState {
     public enum BleScanState {
@@ -13,8 +13,8 @@ public class BLEScanState {
         SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES(5, "SCAN_FAILED_OUT_OF_HARDWARE_RESOURCES");
 
 
-        private int code;
-        private String message;
+        private final int code;
+        private final String message;
 
         BleScanState(int code, String message) {
             this.code = code;
