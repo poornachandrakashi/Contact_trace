@@ -1,25 +1,32 @@
 package com.codeyard.aakraman3;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.AdvertiseCallback;
+import android.bluetooth.le.AdvertiseData;
+import android.bluetooth.le.AdvertiseSettings;
+import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Random;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
     private static final String USER_ID = "USER_ID";
-    private final int REQUEST_ENABLE_BT = 2;
     final String TAG = MainActivity.class.getName();
+    private final int REQUEST_ENABLE_BT = 2;
     private Context context;
     private BluetoothAdapter bluetoothAdapter;
     private SharedPreferences sharedPreferences;
@@ -48,12 +55,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = MainActivity.this;
         userIDTeztView = findViewById(R.id.userID);
-        if (BluetoothUtils.isBluetoothAvailable()) {
-            Toast.makeText(context, "BL not acail", Toast.LENGTH_SHORT).show();
-        }
-
-        if (BluetoothUtils.isBLEAvaialble(context)) {
-            Toast.makeText(context, "BLE not avail", Toast.LENGTH_SHORT).show();
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            finish();
         }
 
         bluetoothAdapter = BluetoothUtils.getBluetoothAdapter();
@@ -70,6 +73,33 @@ public class MainActivity extends AppCompatActivity {
             userID = random(12);
             setUserID(userID);
         }
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
+        BluetoothLeAdvertiser advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
+        AdvertiseSettings settings = new AdvertiseSettings.Builder()
+                .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
+                .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+                .setConnectable(false)
+                .build();
+
+        AdvertiseCallback advertisingCallback = new AdvertiseCallback() {
+            @Override
+            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+                super.onStartSuccess(settingsInEffect);
+            }
+
+            @Override
+            public void onStartFailure(int errorCode) {
+                Log.e("BLE", "Advertising onStartFailure: " + errorCode);
+                super.onStartFailure(errorCode);
+            }
+        };
+        AdvertiseData data = new AdvertiseData.Builder()
+                .setIncludeDeviceName(true)
+                .build();
+        advertiser.startAdvertising(settings, data, advertisingCallback);
+
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragHolder, new ScanListFragment());
         ft.commit();

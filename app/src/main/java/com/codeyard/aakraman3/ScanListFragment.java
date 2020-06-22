@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,7 +36,7 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 15 seconds.
     private static final long SCAN_PERIOD = 15000;//
-    private final List<BLEDevice> mDevices = new ArrayList<BLEDevice>();
+    private final List<BLEDevice> mDevices = new ArrayList<>();
     private final Map<String, BLEDevice> deviceMap = new HashMap<>();
     private final BLEBroadcastReceiver mMessageReceiver = new BLEBroadcastReceiver();
     private ScanListAdapter sAdapter;
@@ -49,7 +48,6 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
     private ProgressBar pBar;
     private RecyclerView rvDevices;
     private TextView emptyView;
-    private Toolbar toolbar;
 
     @Override
     public void onBleScanFailed(BLEScanState.BleScanState scanState) {

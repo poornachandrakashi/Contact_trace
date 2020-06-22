@@ -13,16 +13,22 @@
         android:focusable="true"
         android:text="@string/StartScan" />
 
+    <TextView
+        android:id="@+id/textVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scanButton"
+        android:text="@string/version" />
+
     <ProgressBar
         android:id="@+id/loading_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/scanButton"
+        android:layout_below="@id/textVersion"
         android:layout_gravity="center"
         android:indeterminateTint="@color/blue"
         android:indeterminateTintMode="src_atop"
         android:visibility="invisible" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDevices"
@@ -32,7 +38,6 @@
         android:layout_gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-
         android:layout_marginRight="15dp"
         android:gravity="center"
         android:scrollbars="vertical" />
