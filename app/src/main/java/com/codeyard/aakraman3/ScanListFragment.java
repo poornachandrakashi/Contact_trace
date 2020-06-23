@@ -1,6 +1,7 @@
 package com.codeyard.aakraman3;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -11,12 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codeyard.aakraman3.models.BLEDevice;
 import com.codeyard.aakraman3.models.BLEScanState;
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
+import com.codeyard.aakraman3.server.ServerClass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,23 +34,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ScanListFragment extends Fragment implements SimpleScanCallback {
-    private final static String TAG = ScanListFragment.class.getName();
-    private static final int REQUEST_ENABLE_BT = 1;
-    // Stops scanning after 15 seconds.
-    private static final long SCAN_PERIOD = 15000;//
     private final List<BLEDevice> mDevices = new ArrayList<>();
     private final Map<String, BLEDevice> deviceMap = new HashMap<>();
     private final BLEBroadcastReceiver mMessageReceiver = new BLEBroadcastReceiver();
+    final String TAG = this.getClass().getName();
     private ScanListAdapter sAdapter;
-    private View view;
     private Handler mHandler;
     private BleScanner mBleScanner;
     private boolean mScanning = false;
     private Button scanButton;
     private ProgressBar pBar;
-    private RecyclerView rvDevices;
-    private TextView emptyView;
-
+    ServerClass serverClass;
+    Context conte;
     @Override
     public void onBleScanFailed(BLEScanState.BleScanState scanState) {
 
@@ -57,18 +54,24 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
     @Override
     public void onBleScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
         Log.d("TAG", "onBleScan callback reached on UI thread :" + "device: " + device + " rssi: " + rssi + " scanR: " + Arrays.toString(scanRecord));
-        BLEDevice d = new BLEDevice(device.toString(), rssi, scanRecord);
+        BLEDevice d = new BLEDevice(device.getName(), rssi, scanRecord);
+
         if (!deviceMap.containsKey(device.toString())) {
 
             deviceMap.put(device.toString(), d);
             mDevices.add(d);
-            sAdapter.notifyDataSetChanged();
+
         } else {
             //in 15 seconds the rssi can change
             mDevices.remove(deviceMap.get(device.toString()));
             deviceMap.put(device.toString(), d);
             mDevices.add(d);
             sAdapter.notifyDataSetChanged();
+        }
+        sAdapter.notifyDataSetChanged();
+        if (!serverClass.sendContactTraceData("myId", "otherId", "timestamp")) {
+            Log.d(TAG, "onBleScan: " + serverClass.getErrorMessage());
+            Toast.makeText(conte, serverClass.getErrorMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -84,12 +87,12 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
                         .getApplicationContext(),
                 mDevices);
         setRetainInstance(true);
-
-
+        serverClass = new ServerClass();
+        conte = getActivity();
     }
 
 
-    private void scanLeDevice(final boolean enable) {
+    private void scanLeDevice() {
 
         // Stops scanning after a pre-defined scan period.
         mHandler.postDelayed(new Runnable() {
@@ -103,7 +106,7 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
 
 
             }
-        }, SCAN_PERIOD);
+        }, Constants.SCAN_PERIOD);
 
 
         mScanning = true;
@@ -121,7 +124,7 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_scanlist, container,
+        View view = inflater.inflate(R.layout.fragment_scanlist, container,
                 false);
 
         scanButton = view.findViewById(R.id.scanButton);
@@ -134,20 +137,17 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
                     mDevices.clear();
                     deviceMap.clear();
                     updateStartScanButton();
-                    scanLeDevice(true);
+                    scanLeDevice();
                     mScanning = true;
                 }
             }
         });
         pBar = view.findViewById(R.id.loading_spinner);
 
-        rvDevices = view.findViewById(R.id.rvDevices);
-
-        emptyView = view.findViewById(R.id.empty_view);
-
+        RecyclerView rvDevices = view.findViewById(R.id.rvDevices);
         rvDevices.setAdapter(sAdapter);
         rvDevices.setLayoutManager(new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext()));
-        // emptyList(mDevices.isEmpty());
+
         return view;
 
     }
@@ -167,16 +167,16 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
         scanButton.setClickable(true);
     }
 
-    private void emptyList(boolean empty) {
-        if (empty) {
-            rvDevices.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            rvDevices.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-
-        }
-    }
+//    private void emptyList(boolean empty) {
+//        if (empty) {
+//            rvDevices.setVisibility(View.GONE);
+//            emptyView.setVisibility(View.VISIBLE);
+//        } else {
+//            rvDevices.setVisibility(View.VISIBLE);
+//            emptyView.setVisibility(View.GONE);
+//
+//        }
+//    }
 
 
     @Override
