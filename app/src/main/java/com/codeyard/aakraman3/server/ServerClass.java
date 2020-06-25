@@ -1,5 +1,8 @@
 package com.codeyard.aakraman3.server;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ServerClass {
-    private static final String AAKRAMAN_URL = "http://:5000";
+    private static final String AAKRAMAN_URL = "http://35.154.171.185:5000";
 
     private static String LOGIN_URL = "/api/login";
     private static String SIGNUP_URL = "/api/signup";
@@ -25,6 +28,18 @@ public class ServerClass {
 //        TODO fill
     }
 
+    public static boolean isConnected(Context context) {
+        ConnectivityManager
+                cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null
+                && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
     public boolean sendContactTraceData(String myId, String otherId, String timestamp) {
 
         try {
@@ -33,6 +48,7 @@ public class ServerClass {
             jsonObject.put("myId", myId);
             jsonObject.put("otherId", otherId);
             jsonObject.put("timestamp", timestamp);
+            Log.d("TAG", "sendContactTraceData: " + AAKRAMAN_URL + CONTACT_URL);
             new SendServerTask().execute(AAKRAMAN_URL + CONTACT_URL, jsonObject.toString());
 
 
@@ -45,10 +61,6 @@ public class ServerClass {
 
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
     private static class SendServerTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -58,7 +70,7 @@ public class ServerClass {
 
             HttpURLConnection httpURLConnection = null;
             try {
-
+                Log.d("TAG", "doInBackground: " + params[1]);
 
                 URL url = new URL(params[0]);
 
