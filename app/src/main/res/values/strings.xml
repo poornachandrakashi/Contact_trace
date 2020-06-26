@@ -14,5 +14,5 @@
     <string name="local_service_started">broadcast service started</string>
     <string name="local_service_label">broadcast service notification</string>
     <string name="no_data_available">no_data_available</string>
-    <string name="version">Version 1.1.1</string>
+    <string name="version">Version 1.2.0</string>
 </resources>

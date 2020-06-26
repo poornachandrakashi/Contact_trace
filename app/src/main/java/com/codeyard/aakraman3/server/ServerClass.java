@@ -97,7 +97,7 @@ public class ServerClass {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
+            Log.d("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         }
     }
 }

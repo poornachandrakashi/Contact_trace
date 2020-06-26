@@ -19,7 +19,6 @@ import java.util.Random;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
     private static final String USER_ID = "USER_ID";
@@ -99,9 +98,14 @@ public class MainActivity extends AppCompatActivity {
         advertiser.startAdvertising(settings, data, advertisingCallback);
 
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragHolder, new ScanListFragment());
-        ft.commit();
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.replace(R.id.fragHolder, new ScanListFragment());
+//        ft.commit();
+
+//        start the service
+        Intent startServiceIntent = new Intent(this, AutoScannerService.class);
+        startService(startServiceIntent);
+
     }
 
 
