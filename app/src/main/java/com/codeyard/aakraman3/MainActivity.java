@@ -9,10 +9,8 @@ import android.bluetooth.le.AdvertiseSettings;
 import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -29,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private final int REQUEST_ENABLE_BT = 2;
     private Context context;
     private BluetoothAdapter bluetoothAdapter;
-    private SharedPreferences sharedPreferences;
     private String userID = "";
 
     //View
@@ -65,17 +62,19 @@ public class MainActivity extends AppCompatActivity {
             enableBluetooth();
         }
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        UserIDModel userIDModel = new UserIDModel(this.context);
 
-        userID = getUserId();
+
+        userID = userIDModel.getUserId();
         if (userID.equals("")) {
 //            For now genreate random
             userID = random(12);
-            setUserID(userID);
+            userIDModel.setUserID(userID);
         }
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
         BluetoothLeAdvertiser advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
+
         AdvertiseSettings settings = new AdvertiseSettings.Builder()
                 .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
                 .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
@@ -103,15 +102,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragHolder, new ScanListFragment());
         ft.commit();
-
-
     }
 
-    private void setUserID(String userId) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(USER_ID, userId);
-        editor.apply();
-    }
 
     //
     private void enableBluetooth() {
@@ -119,10 +111,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
     }
 
-
-    private String getUserId() {
-        return sharedPreferences.getString(USER_ID, "");
-    }
 
     public AlertDialog.Builder createAlert(String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -147,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         }
-
-
     }
 
     @Override
@@ -160,7 +146,5 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
 }
 

@@ -1,7 +1,6 @@
 package com.codeyard.aakraman3;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.codeyard.aakraman3.models.BLEDevice;
 import com.codeyard.aakraman3.models.BLEScanState;
@@ -34,18 +32,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ScanListFragment extends Fragment implements SimpleScanCallback {
+    final String TAG = this.getClass().getName();
     private final List<BLEDevice> mDevices = new ArrayList<>();
     private final Map<String, BLEDevice> deviceMap = new HashMap<>();
     private final BLEBroadcastReceiver mMessageReceiver = new BLEBroadcastReceiver();
-    final String TAG = this.getClass().getName();
+    private ServerClass serverClass;
     private ScanListAdapter sAdapter;
     private Handler mHandler;
     private BleScanner mBleScanner;
     private boolean mScanning = false;
     private Button scanButton;
     private ProgressBar pBar;
-    ServerClass serverClass;
-    Context conte;
+    private UserIDModel userIDModel;
+
     @Override
     public void onBleScanFailed(BLEScanState.BleScanState scanState) {
 
@@ -69,26 +68,31 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
             sAdapter.notifyDataSetChanged();
         }
         sAdapter.notifyDataSetChanged();
-        if (!serverClass.sendContactTraceData("myId", "otherId", "timestamp")) {
-            Log.d(TAG, "onBleScan: " + serverClass.getErrorMessage());
-            Toast.makeText(conte, serverClass.getErrorMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+        String myId = userIDModel.getUserId();
+        String otherId = device.getName();
+        String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
+
+        serverClass.sendContactTraceData(myId, otherId, timestamp);
 
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mHandler = new Handler();
         sAdapter = new ScanListAdapter(
                 Objects.requireNonNull(
                         getActivity())
                         .getApplicationContext(),
                 mDevices);
+
         setRetainInstance(true);
+
         serverClass = new ServerClass();
-        conte = getActivity();
+
+        userIDModel = new UserIDModel(getActivity());
     }
 
 

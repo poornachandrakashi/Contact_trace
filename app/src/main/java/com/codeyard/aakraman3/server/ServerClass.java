@@ -1,8 +1,5 @@
 package com.codeyard.aakraman3.server;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,22 +22,15 @@ public class ServerClass {
     private String errorMessage = "";
 
     public ServerClass() {
-//        TODO fill
     }
 
-    public static boolean isConnected(Context context) {
-        ConnectivityManager
-                cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null
-                && activeNetwork.isConnectedOrConnecting();
-    }
+
 
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    public boolean sendContactTraceData(String myId, String otherId, String timestamp) {
+    public void sendContactTraceData(String myId, String otherId, String timestamp) {
 
         try {
 
@@ -55,10 +45,6 @@ public class ServerClass {
         } catch (JSONException e) {
             errorMessage = "";
         }
-
-
-        return false;
-
     }
 
     private static class SendServerTask extends AsyncTask<String, Void, String> {
