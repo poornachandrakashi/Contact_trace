@@ -53,7 +53,7 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
         String otherId = device.getName();
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
 
-        new ServerClass().sendContactTraceData(myId, otherId, timestamp);
+        new ServerClass().sendContactTraceData(myId, otherId, timestamp, this);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.codeyard.aakraman3.server;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.codeyard.aakraman3.FileUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,12 +28,11 @@ public class ServerClass {
     }
 
 
-
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    public void sendContactTraceData(String myId, String otherId, String timestamp) {
+    public void sendContactTraceData(String myId, String otherId, String timestamp, Context conted) {
 
         try {
 
@@ -39,7 +41,7 @@ public class ServerClass {
             jsonObject.put("otherId", otherId);
             jsonObject.put("timestamp", timestamp);
             Log.d("TAG", "sendContactTraceData: " + AAKRAMAN_URL + CONTACT_URL);
-            new SendServerTask().execute(AAKRAMAN_URL + CONTACT_URL, jsonObject.toString());
+            new SendServerTask(conted).execute(AAKRAMAN_URL + CONTACT_URL, jsonObject.toString());
 
 
         } catch (JSONException e) {
@@ -48,6 +50,11 @@ public class ServerClass {
     }
 
     private static class SendServerTask extends AsyncTask<String, Void, String> {
+        Context mCont;
+
+        public SendServerTask(Context context) {
+            this.mCont = context;
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -57,7 +64,7 @@ public class ServerClass {
             HttpURLConnection httpURLConnection = null;
             try {
                 Log.d("TAG", "doInBackground: " + params[1]);
-
+                FileUtil.appendToFile(params[1], mCont);
                 URL url = new URL(params[0]);
 
                 httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -98,6 +105,9 @@ public class ServerClass {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Log.d("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
+//            OK message place
+            FileUtil.appendToFile(result, mCont);
+
         }
     }
 }

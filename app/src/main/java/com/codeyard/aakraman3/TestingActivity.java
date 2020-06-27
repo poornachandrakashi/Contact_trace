@@ -19,5 +19,8 @@ public class TestingActivity extends AppCompatActivity {
         textView.setText(userIDModel.getUserId());
         TextView blName = findViewById(R.id.blname);
         blName.setText(BluetoothUtils.getBluetoothAdapter().getName());
+
+        TextView logs = findViewById(R.id.logs);
+        logs.setText(FileUtil.readFromFile(this));
     }
 }

@@ -16,6 +16,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.orm.SchemaGenerator;
+import com.orm.SugarContext;
+import com.orm.SugarDb;
+
 import java.util.Random;
 
 import androidx.appcompat.app.AlertDialog;
@@ -107,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
 //        start the service
         Intent startServiceIntent = new Intent(this, AutoScannerService.class);
         startService(startServiceIntent);
+
+//Initialise sugar db
+        SugarContext.init(MainActivity.this);
+        SchemaGenerator schemaGenerator = new SchemaGenerator(this);
+        schemaGenerator.createDatabase(new SugarDb(this).getDB());
 
     }
 
