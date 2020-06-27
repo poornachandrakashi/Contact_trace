@@ -16,9 +16,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/user_id" />
 
-    <TextView
-        android:id="@+id/logs"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/blname" />
+        android:layout_below="@id/blname">
+
+        <TextView
+            android:id="@+id/logs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
 </RelativeLayout>
