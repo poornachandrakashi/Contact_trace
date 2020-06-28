@@ -40,7 +40,7 @@ public class BleScanner {
             @Override
             public void run() {
                 onStopBleScan();
-                onBleScanFailed(BLEScanState.BleScanState.SCAN_TIMEOUT);
+                onBleScanFailed();
             }
         };
         boolean isScanning;
@@ -51,6 +51,6 @@ public class BleScanner {
 
         protected abstract void onStopBleScan();
 
-        protected abstract void onBleScanFailed(BLEScanState.BleScanState scanState);
+        protected abstract void onBleScanFailed();
     }
 }

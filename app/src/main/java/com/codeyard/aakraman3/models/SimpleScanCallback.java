@@ -23,8 +23,7 @@ public interface SimpleScanCallback {
     /**
      * Callback when scan could not be started.
      *
-     * @param scanState Error code (one of SCAN_FAILED_*) for scan failure.
      */
-    void onBleScanFailed(BLEScanState.BleScanState scanState);
+    void onBleScanFailed();
 
 }

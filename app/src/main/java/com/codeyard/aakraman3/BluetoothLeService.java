@@ -18,15 +18,15 @@ import android.util.Log;
 import java.util.List;
 
 public class BluetoothLeService extends Service {
-    public final static String ACTION_GATT_CONNECTED =
+    private final static String ACTION_GATT_CONNECTED =
             "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_DISCONNECTED =
+    private final static String ACTION_GATT_DISCONNECTED =
             "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_SERVICES_DISCOVERED =
+    private final static String ACTION_GATT_SERVICES_DISCOVERED =
             "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED";
-    public final static String ACTION_DATA_AVAILABLE =
+    private final static String ACTION_DATA_AVAILABLE =
             "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
-    public final static String EXTRA_DATA =
+    private final static String EXTRA_DATA =
             "com.example.bluetooth.le.EXTRA_DATA";
     private final static String TAG = BluetoothLeService.class.getSimpleName();
     private static final int STATE_DISCONNECTED = 0;
@@ -75,14 +75,14 @@ public class BluetoothLeService extends Service {
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                broadcastUpdate(characteristic);
             }
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            broadcastUpdate(characteristic);
         }
     };
 
@@ -91,9 +91,8 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
-    private void broadcastUpdate(final String action,
-                                 final BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
+    private void broadcastUpdate(final BluetoothGattCharacteristic characteristic) {
+        final Intent intent = new Intent(BluetoothLeService.ACTION_DATA_AVAILABLE);
 
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
@@ -166,7 +165,7 @@ public class BluetoothLeService extends Service {
         }
 
         // Previously connected device.  Try to reconnect.
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
+        if (address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
@@ -209,7 +208,7 @@ public class BluetoothLeService extends Service {
      * After using a given BLE device, the app must call this method to ensure resources are
      * released properly.
      */
-    public void close() {
+    private void close() {
         if (mBluetoothGatt == null) {
             return;
         }
@@ -261,7 +260,7 @@ public class BluetoothLeService extends Service {
         return mBluetoothGatt.getServices();
     }
 
-    public class LocalBinder extends Binder {
+    class LocalBinder extends Binder {
         BluetoothLeService getService() {
             return BluetoothLeService.this;
         }

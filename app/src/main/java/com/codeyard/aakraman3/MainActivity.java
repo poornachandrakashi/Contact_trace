@@ -14,11 +14,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.Random;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -26,17 +26,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String USER_ID = "USER_ID";
     final String TAG = MainActivity.class.getName();
     private final int REQUEST_ENABLE_BT = 2;
-    private Context context;
     private BluetoothAdapter bluetoothAdapter;
-    private String userID = "";
 
-    //View
-    private TextView userIDTeztView;
-
-    private static String random(int len) {
+    private static String random() {
         Random generator = new Random();
         StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(len);
+        int randomLength = generator.nextInt(12);
         char tempChar;
         for (int i = 0; i < randomLength; i++) {
             tempChar = (char) (generator.nextInt(96) + 32);
@@ -51,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(saved);
 
         setContentView(R.layout.activity_main);
-        context = MainActivity.this;
-        userIDTeztView = findViewById(R.id.userID);
+        Context context = MainActivity.this;
+        //View
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             finish();
         }
@@ -63,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
             enableBluetooth();
         }
 
-        UserIDModel userIDModel = new UserIDModel(this.context);
+        UserIDModel userIDModel = new UserIDModel(context);
 
 
-        userID = userIDModel.getUserId();
+        String userID = userIDModel.getUserId();
         if (userID.equals("")) {
 //            For now genreate random
-            userID = random(12);
+            userID = random();
             userIDModel.setUserID(userID);
         }
         BluetoothUtils.setBluetoothName(bluetoothAdapter, userID);
@@ -112,7 +107,13 @@ public class MainActivity extends AppCompatActivity {
 //        SugarContext.init(MainActivity.this);
 //        SchemaGenerator schemaGenerator = new SchemaGenerator(this);
 //        schemaGenerator.createDatabase(new SugarDb(this).getDB());
-
+        Button button = findViewById(R.id.toSignUp);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+            }
+        });
     }
 
 
@@ -122,17 +123,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
     }
 
-
-    public AlertDialog.Builder createAlert(String message) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage(message);
-        return alertDialogBuilder;
-    }
-
-    public void showAlert(AlertDialog.Builder alertDialogBuilder) {
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
 
     @Override
     protected void onResume() {

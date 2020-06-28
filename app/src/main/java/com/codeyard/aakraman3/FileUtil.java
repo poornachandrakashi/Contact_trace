@@ -11,13 +11,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class FileUtil {
-    Context context;
+    private final Context context;
 
     public FileUtil(Context context) {
         this.context = context;
     }
 
-    public static String readFromFile(Context context) {
+    static String readFromFile(Context context) {
 
         String ret = "";
 
@@ -27,7 +27,7 @@ public class FileUtil {
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
+                String receiveString;
                 StringBuilder stringBuilder = new StringBuilder();
 
                 while ((receiveString = bufferedReader.readLine()) != null) {
@@ -46,7 +46,7 @@ public class FileUtil {
         return ret;
     }
 
-    public static void writeToFile(String data, Context context) {
+    private static void writeToFile(String data, Context context) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
             outputStreamWriter.write(data);

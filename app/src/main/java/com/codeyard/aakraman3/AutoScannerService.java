@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.codeyard.aakraman3.models.BLEScanState;
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
 import com.codeyard.aakraman3.server.ServerClass;
@@ -17,12 +16,12 @@ import java.util.Objects;
 import androidx.annotation.Nullable;
 
 public class AutoScannerService extends Service implements SimpleScanCallback {
-    Context context;
-    UserIDModel userIDModel;
-    String TAG = "TAG";
+    private final String TAG = "TAG";
+    private Context context;
+    private UserIDModel userIDModel;
     private BleScanner mBleScanner;
 
-    public void startScan() {
+    private void startScan() {
         if (mBleScanner == null) {
             mBleScanner = new BleScanner(Objects.requireNonNull(context).getApplicationContext(), this);
         }
@@ -57,7 +56,7 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
     }
 
     @Override
-    public void onBleScanFailed(BLEScanState.BleScanState scanState) {
+    public void onBleScanFailed() {
         Log.d("TAG", "onBleScanFailed: ");
     }
 }

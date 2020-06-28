@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class InternetUtils {
+class InternetUtils {
     public static int getConnectivityStatusString(Context context) {
         int status = Constants.NO_INFO;
         ConnectivityManager cm =

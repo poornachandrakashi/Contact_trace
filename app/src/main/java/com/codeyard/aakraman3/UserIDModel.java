@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import static com.codeyard.aakraman3.Constants.USER_ID;
 
 class UserIDModel {
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     UserIDModel(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

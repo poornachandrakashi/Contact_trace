@@ -49,7 +49,7 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
 
         View deviceView = inflater.inflate(R.layout.listitem_device, parent, false);
 
-        return new ViewHolder(deviceView, getListener());
+        return new ViewHolder(deviceView);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
         return mDevices.size();
     }
 
-    public interface OnItemClickListener {
+    private interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
 
@@ -81,7 +81,7 @@ public class ScanListAdapter extends RecyclerView.Adapter<ScanListAdapter.ViewHo
         final TextView rssi;
         final TextView record;
 
-        ViewHolder(final View itemView, final OnItemClickListener listener) {
+        ViewHolder(final View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.device_name);
             rssi = itemView.findViewById(R.id.rssi);

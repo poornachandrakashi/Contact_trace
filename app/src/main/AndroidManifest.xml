@@ -24,7 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".SignUpActivity" />
         <activity android:name=".TestingActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

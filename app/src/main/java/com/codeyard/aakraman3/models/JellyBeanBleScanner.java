@@ -13,8 +13,8 @@ public class JellyBeanBleScanner extends BleScanner.BaseBleScanner {
     private final static String TAG = JellyBeanBleScanner.class.getName();
 
 
-    private BluetoothAdapter mBluetooth;
-    private SimpleScanCallback mScanCallback;
+    private final BluetoothAdapter mBluetooth;
+    private final SimpleScanCallback mScanCallback;
     private final BluetoothAdapter.LeScanCallback leScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
@@ -48,7 +48,7 @@ public class JellyBeanBleScanner extends BleScanner.BaseBleScanner {
             timeoutHandler.postDelayed(timeoutRunnable, delay);
             Log.d(TAG, "mBluetooth.startLeScan() " + isScanning);
         } else {
-            mScanCallback.onBleScanFailed(BLEScanState.BleScanState.BLUETOOTH_OFF);//bluetooth is off
+            mScanCallback.onBleScanFailed();//bluetooth is off
         }
     }
 
@@ -59,7 +59,7 @@ public class JellyBeanBleScanner extends BleScanner.BaseBleScanner {
             isScanning = mBluetooth.startLeScan(leScanCallback);
             Log.d(TAG, "mBluetooth.startLeScan() " + isScanning);
         } else {
-            mScanCallback.onBleScanFailed(BLEScanState.BleScanState.BLUETOOTH_OFF);//bluetooth is off
+            mScanCallback.onBleScanFailed();//bluetooth is off
         }
     }
 
@@ -73,8 +73,8 @@ public class JellyBeanBleScanner extends BleScanner.BaseBleScanner {
     }
 
     @Override
-    public void onBleScanFailed(BLEScanState.BleScanState scanState) {
-        mScanCallback.onBleScanFailed(scanState);
+    public void onBleScanFailed() {
+        mScanCallback.onBleScanFailed();
 
     }
 }

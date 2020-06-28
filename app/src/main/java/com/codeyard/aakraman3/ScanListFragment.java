@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.codeyard.aakraman3.models.BLEDevice;
-import com.codeyard.aakraman3.models.BLEScanState;
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
 import com.codeyard.aakraman3.server.ServerClass;
@@ -46,7 +45,7 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
     private UserIDModel userIDModel;
 
     @Override
-    public void onBleScanFailed(BLEScanState.BleScanState scanState) {
+    public void onBleScanFailed() {
 
     }
 
@@ -184,11 +183,6 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
 
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -203,13 +197,4 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
         LocalBroadcastManager.getInstance(Objects.requireNonNull(getActivity()).getApplicationContext()).unregisterReceiver(mMessageReceiver);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

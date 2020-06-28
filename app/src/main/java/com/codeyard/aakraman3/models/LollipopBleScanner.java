@@ -18,8 +18,8 @@ public class LollipopBleScanner extends BleScanner.BaseBleScanner {
 
 
     private BluetoothLeScanner mBluetoothScanner = null;
-    private BluetoothAdapter mBluetoothAdapter;
-    private SimpleScanCallback mScanCallback;
+    private final BluetoothAdapter mBluetoothAdapter;
+    private final SimpleScanCallback mScanCallback;
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(final int callbackType, final ScanResult result) {
@@ -79,7 +79,7 @@ public class LollipopBleScanner extends BleScanner.BaseBleScanner {
             }
             timeoutHandler.postDelayed(timeoutRunnable, delay);
         } else {
-            mScanCallback.onBleScanFailed(BLEScanState.BleScanState.BLUETOOTH_OFF);
+            mScanCallback.onBleScanFailed();
         }
         Log.d(TAG, "mBluetoothScanner.startScan()");
     }
@@ -94,11 +94,11 @@ public class LollipopBleScanner extends BleScanner.BaseBleScanner {
                 isScanning = true;
             } catch (Exception e) {
                 isScanning = false;
-                mScanCallback.onBleScanFailed(BLEScanState.BleScanState.BLUETOOTH_OFF);
+                mScanCallback.onBleScanFailed();
                 Log.e(TAG, e.toString());
             }
         } else {
-            mScanCallback.onBleScanFailed(BLEScanState.BleScanState.BLUETOOTH_OFF);
+            mScanCallback.onBleScanFailed();
         }
         Log.d(TAG, "mBluetoothScanner.startScan()");
     }
@@ -117,7 +117,7 @@ public class LollipopBleScanner extends BleScanner.BaseBleScanner {
     }
 
     @Override
-    public void onBleScanFailed(BLEScanState.BleScanState scanState) {
-        mScanCallback.onBleScanFailed(scanState);
+    public void onBleScanFailed() {
+        mScanCallback.onBleScanFailed();
     }
 }
