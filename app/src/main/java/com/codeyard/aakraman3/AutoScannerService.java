@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
+import com.codeyard.aakraman3.models.UserIDModel;
 import com.codeyard.aakraman3.server.ServerClass;
 
 import java.util.Objects;

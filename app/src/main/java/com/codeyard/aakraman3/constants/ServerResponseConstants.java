@@ -1,4 +1,4 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.constants;
 
 public class ServerResponseConstants {
 

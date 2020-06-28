@@ -1,25 +1,25 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import static com.codeyard.aakraman3.Constants.USER_ID;
+import static com.codeyard.aakraman3.constants.Constants.USER_ID;
 
-class UserIDModel {
+public class UserIDModel {
     private final SharedPreferences sharedPreferences;
 
-    UserIDModel(Context context) {
+    public UserIDModel(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    void setUserID(String userId) {
+    public void setUserID(String userId) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USER_ID, userId);
         editor.apply();
     }
 
-    String getUserId() {
+    public String getUserId() {
         return sharedPreferences.getString(USER_ID, "");
     }
 

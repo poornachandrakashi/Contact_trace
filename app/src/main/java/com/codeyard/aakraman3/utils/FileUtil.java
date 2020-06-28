@@ -1,4 +1,4 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,7 +17,7 @@ public class FileUtil {
         this.context = context;
     }
 
-    static String readFromFile(Context context) {
+    public static String readFromFile(Context context) {
 
         String ret = "";
 
@@ -46,7 +46,7 @@ public class FileUtil {
         return ret;
     }
 
-    private static void writeToFile(String data, Context context) {
+    public static void writeToFile(String data, Context context) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
             outputStreamWriter.write(data);

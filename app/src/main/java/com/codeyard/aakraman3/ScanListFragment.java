@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.models.BLEDevice;
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
+import com.codeyard.aakraman3.models.UserIDModel;
 import com.codeyard.aakraman3.server.ServerClass;
 
 import java.util.ArrayList;

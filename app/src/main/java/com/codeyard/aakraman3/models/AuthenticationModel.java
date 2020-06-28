@@ -1,10 +1,10 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import static com.codeyard.aakraman3.Constants.AUTH;
+import static com.codeyard.aakraman3.constants.Constants.AUTH;
 
 public class AuthenticationModel {
     private final SharedPreferences sharedPreferences;

@@ -7,9 +7,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.codeyard.aakraman3.AuthenticationModel;
-import com.codeyard.aakraman3.Constants;
-import com.codeyard.aakraman3.FileUtil;
+import com.codeyard.aakraman3.constants.Constants;
+import com.codeyard.aakraman3.models.AuthenticationModel;
+import com.codeyard.aakraman3.utils.FileUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

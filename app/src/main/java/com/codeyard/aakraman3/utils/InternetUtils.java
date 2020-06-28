@@ -1,8 +1,10 @@
-package com.codeyard.aakraman3;
+package com.codeyard.aakraman3.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import com.codeyard.aakraman3.constants.Constants;
 
 class InternetUtils {
     public static int getConnectivityStatusString(Context context) {
