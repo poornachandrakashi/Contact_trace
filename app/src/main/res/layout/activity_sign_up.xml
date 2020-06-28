@@ -24,8 +24,8 @@
 
             <ImageView
                 android:layout_width="100dp"
-                android:layout_height="100dp" />
-            <!--            android:src="@drawable/ic_account1"-->
+                android:layout_height="100dp"
+                android:src="@drawable/ic_account1" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -147,6 +147,7 @@
                 android:layout_height="wrap_content"
 
                 android:layout_marginTop="5dp"
+                android:background="@drawable/button1"
                 android:elevation="5dp"
                 android:fontFamily="monospace"
                 android:text="Sign Up"
@@ -154,10 +155,8 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="18dp"
                 android:textStyle="bold" />
-            <!--        android:background="@drawable/button1"-->
+
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
 
-    <!---->
