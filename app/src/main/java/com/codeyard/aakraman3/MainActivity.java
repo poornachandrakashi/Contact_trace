@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.codeyard.aakraman3.constants.Constants;
+import com.codeyard.aakraman3.models.UserIDModel;
 import com.codeyard.aakraman3.utils.BluetoothUtils;
 import com.codeyard.aakraman3.utils.Util;
 import com.google.android.material.navigation.NavigationView;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         Intent i = getIntent();
-        BluetoothUtils.setBluetoothName(bluetoothAdapter, i.getStringExtra(Constants.USER_ID));
+        BluetoothUtils.setBluetoothName(bluetoothAdapter, new UserIDModel(this).getUserId());
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
         BluetoothLeAdvertiser advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
@@ -147,6 +147,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case R.id.login:
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                break;
             case R.id.nav_contact:
                 startActivity((new Intent(Intent.ACTION_DIAL)).setData(Uri.parse("tel:1075")));
                 break;

@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".ScannedBLEActivity" />
         <activity android:name=".ResourcesActivity" />
         <activity android:name=".SelfTestActivity" />
@@ -35,11 +35,13 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".TestingActivity" />
         <activity android:name=".LauncherActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <service android:name=".BroadcastService" />

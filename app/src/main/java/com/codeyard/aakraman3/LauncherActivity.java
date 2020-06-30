@@ -43,14 +43,15 @@ public class LauncherActivity extends AppCompatActivity {
                     startActivity(new Intent(
                             LauncherActivity.this,
                             SignUpActivity.class));
+                    finish();
+                } else {
+                    startActivity(
+                            new Intent(
+                                    getApplicationContext(),
+                                    MainActivity.class)
+                    );
+                    finish();
                 }
-
-                startActivity(
-                        new Intent(
-                                getApplicationContext(),
-                                MainActivity.class)
-                                .putExtra(Constants.USER_ID, userID));
-                finish();
             }
         }, Constants.SPLASH_SCREEN_TIMEOUT);
 

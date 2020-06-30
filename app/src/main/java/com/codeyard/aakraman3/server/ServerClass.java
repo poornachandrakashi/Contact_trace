@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.models.AuthenticationModel;
@@ -105,11 +104,11 @@ public class ServerClass {
                 httpURLConnection.setRequestProperty("Accept", "application/json");
                 httpURLConnection.setDoOutput(true);
 
-                //Get auth token and if it doesnt abort
+                //Get auth token and if it doesn't abort
                 if (params[2].equals("TRUE")) {
                     AuthenticationModel authenticationModel = new AuthenticationModel(mCont);
                     if (authenticationModel.getAuth().equals("")) {
-                        Toast.makeText(mCont, "Authentication keynot dound", Toast.LENGTH_SHORT).show();
+                        Log.d("AUTH", "Authentication keynot dound");
                         return "";
                     }
                     httpURLConnection.addRequestProperty("Authorization", "Bearer " + authenticationModel.getAuth());

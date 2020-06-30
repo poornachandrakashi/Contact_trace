@@ -22,7 +22,7 @@ import org.json.JSONException;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText userName, password;
+    EditText email, password;
     Button loginButton;
     Context context;
 
@@ -78,12 +78,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+//        TODO check if user log in.. if yes redirect to mainactivity
+
+        context = LoginActivity.this;
+        email = findViewById(R.id.login_email);
+        password = findViewById(R.id.login_password);
         loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new ServerClass().sendLogin(LoginActivity.this,
-                        userName.getText().toString(),
+                        email.getText().toString(),
                         password.getText().toString());
             }
         });
