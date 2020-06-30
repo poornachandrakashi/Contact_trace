@@ -24,10 +24,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".ScannedBLEActivity" />
+        <activity android:name=".ResourcesActivity" />
+        <activity android:name=".SelfTestActivity" />
+        <activity android:name=".NewsActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".MapActivity" />
+        <activity android:name=".LoginActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".TestingActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

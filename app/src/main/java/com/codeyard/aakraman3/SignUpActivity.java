@@ -12,8 +12,12 @@ import android.widget.EditText;
 
 import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.constants.ServerResponseConstants;
+import com.codeyard.aakraman3.models.UserIDModel;
 import com.codeyard.aakraman3.server.ServerClass;
+import com.codeyard.aakraman3.utils.JSONUtils;
 import com.codeyard.aakraman3.utils.Util;
+
+import org.json.JSONException;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,27 +30,48 @@ public class SignUpActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String serverResponse = intent.getStringExtra(Constants.HTTP_RESPONSE);
             Log.d("TAG", "onReceive: NETWORK " + serverResponse);
-            if (serverResponse.equals(ServerResponseConstants.SIGNUP_OK)) {
-                switchToLogin();
-            }
-            if (serverResponse.equals(ServerResponseConstants.SIGNUP_FAIL_EMAIL)) {
-                Util.showAlert(
-                        Util.createAlert(
-                                "This email is already associated with some acocunt",
-                                context));
-            }
+            try {
+                JSONUtils jsonUtils = new JSONUtils(serverResponse);
+                String status = jsonUtils.getKeyValuePair(ServerResponseConstants.STATUS);
+                if (status.equals(ServerResponseConstants.SIGNUP_OK)) {
+//                    get BLE id and store
 
-            if (serverResponse.equals(ServerResponseConstants.SIGNUP_FAIL_USERNAME)) {
-                Util.showAlert(
-                        Util.createAlert(
-                                "This username is already associated with some account",
-                                context));
-            }
-            if (serverResponse.equals(ServerResponseConstants.SIGNUP_FAIL)) {
-                Util.showAlert(
-                        Util.createAlert(
-                                "Please try again!!",
-                                context));
+                    String bleId = jsonUtils.getKeyValuePair(ServerResponseConstants.BLE_ID);
+                    UserIDModel userIDModel = new UserIDModel(context);
+                    userIDModel.setUserID(bleId);
+
+                    switchToLogin();
+                }
+                if (status.equals(ServerResponseConstants.SIGNUP_INVALID_EMAIL)) {
+                    Util.showAlert(
+                            Util.createAlert(
+                                    "This email is already associated with some acocunt",
+                                    context));
+                    return;
+                }
+
+                if (status.equals(ServerResponseConstants.SIGNUP_USER_EXISTS)) {
+                    Util.showAlert(
+                            Util.createAlert(
+                                    "This username is already associated with some account",
+                                    context));
+                    return;
+                }
+                if (status.equals(ServerResponseConstants.SIGNUP_INVALID_PHONE)) {
+                    Util.showAlert(
+                            Util.createAlert(
+                                    "This phone no. seems to be invalid..",
+                                    context));
+                    return;
+                }
+                if (status.equals(ServerResponseConstants.SIGNUP_FAIL)) {
+                    Util.showAlert(
+                            Util.createAlert(
+                                    "Please try again!!",
+                                    context));
+                }
+            } catch (JSONException je) {
+                Log.e("TAG", "onReceive: se", je);
             }
         }
     };
@@ -99,7 +124,6 @@ public class SignUpActivity extends AppCompatActivity {
                         phone.getText().toString(),
                         email.getText().toString()
                 );
-
             }
         });
 
@@ -107,7 +131,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void switchToLogin() {
         //On Successful signup...store data in server and Intent to login page
-        Intent i = new Intent(SignUpActivity.this, TestingActivity.class);
+        Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
 //        i.putExtra(Constants.FULLNAME, name.getText().toString());
 //        i.putExtra(Constants.USERNAME, username.getText().toString());
 //        i.putExtra(Constants.PHONE, phone.getText().toString());
