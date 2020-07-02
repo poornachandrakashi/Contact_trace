@@ -9,13 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.constants.ServerResponseConstants;
@@ -26,8 +24,6 @@ import com.codeyard.aakraman3.utils.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.nio.charset.StandardCharsets;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -127,42 +123,24 @@ public class SignUpActivity extends AppCompatActivity {
 
                 final String URL = Constants.AAKRAMAN_URL + Constants.SIGNUP_URL;
 
-                StringRequest stringRequest = new StringRequest(
-                        Request.Method.POST,
-                        URL,
-                        new Response.Listener<String>() {
+                // Request a json response from the provided URL
+                JsonObjectRequest jsonObjRequest = new JsonObjectRequest
+                        (Request.Method.POST, URL, signUpJSON, new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(String response) {
-                                Log.e("VOLLEY", response);
+                            public void onResponse(JSONObject response) {
+                                Log.e("TAG", "onResponse: " + response.toString());
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("VOLLEY", error.toString());
-                    }
-                }) {
-                    @Override
-                    public String getBodyContentType() {
-                        return "application/json; charset=utf-8";
-                    }
+                        },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.e("TAG", "onErrorResponse: wtf", error);
+                                    }
+                                });
 
-                    @Override
-                    public byte[] getBody() {
-                        return requestBody == null ? null : requestBody.getBytes(StandardCharsets.UTF_8);
-                    }
+// Add the request to the RequestQueue.
+                requestQueue.add(jsonObjRequest);
 
-                    @Override
-                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                        String responseString = "";
-                        if (response != null) {
-                            responseString = String.valueOf(response.statusCode);
-                            // can get more details such as response.headers
-                        }
-                        return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
-                    }
-                };
-
-                requestQueue.add(stringRequest);
 
             }
         });
