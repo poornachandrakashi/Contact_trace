@@ -24,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ScannedBLEActivity" />
         <activity android:name=".ResourcesActivity" />
@@ -34,6 +35,7 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".TestingActivity" />
+
         <activity android:name=".LauncherActivity">
 
             <intent-filter>
@@ -46,6 +48,7 @@
 
         <service android:name=".BroadcastService" />
         <service android:name=".AutoScannerService" />
+        <service android:name=".service.NotificationService" />
     </application>
 
 </manifest>

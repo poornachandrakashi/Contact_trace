@@ -74,7 +74,7 @@ public class ScanListFragment extends Fragment implements SimpleScanCallback {
         String otherId = device.getName();
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
 
-        serverClass.sendContactTraceData(myId, otherId, timestamp, this.getActivity());
+//        serverClass.sendContactTraceData(myId, otherId, timestamp, this.getActivity());
 
     }
 

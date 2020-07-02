@@ -3,13 +3,20 @@ package com.codeyard.aakraman3;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.constants.ServerResponseConstants;
 import com.codeyard.aakraman3.models.UserIDModel;
@@ -18,6 +25,9 @@ import com.codeyard.aakraman3.utils.JSONUtils;
 import com.codeyard.aakraman3.utils.Util;
 
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.nio.charset.StandardCharsets;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -76,24 +86,13 @@ public class SignUpActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        context.registerReceiver(broadcastReceiver, new IntentFilter(Constants.NETWORK_RESPONSE));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        context.unregisterReceiver(broadcastReceiver);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         context = SignUpActivity.this;
-        username = findViewById(R.id.name);
+        username = findViewById(R.id.username);
         name = findViewById(R.id.name);
         email = findViewById(R.id.uemail);
         phone = findViewById(R.id.phone);
@@ -117,13 +116,54 @@ public class SignUpActivity extends AppCompatActivity {
 //                }
 
 //                Send data to server
-                new ServerClass().signUp(context,
-                        username.getText().toString(),
-                        password.getText().toString(),
-                        name.getText().toString(),
-                        phone.getText().toString(),
-                        email.getText().toString()
-                );
+                RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+//                Make the json
+                JSONObject signUpJSON = ServerClass.getSignUpJSON(username.getText().toString(), password.getText().toString(), name.getText().toString(), phone.getText().toString(), email.getText().toString());
+                if (signUpJSON == null) {
+                    return;
+                }
+                final String requestBody = signUpJSON.toString();
+
+                final String URL = Constants.AAKRAMAN_URL + Constants.SIGNUP_URL;
+
+                StringRequest stringRequest = new StringRequest(
+                        Request.Method.POST,
+                        URL,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.e("VOLLEY", response);
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("VOLLEY", error.toString());
+                    }
+                }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @Override
+                    public byte[] getBody() {
+                        return requestBody == null ? null : requestBody.getBytes(StandardCharsets.UTF_8);
+                    }
+
+                    @Override
+                    protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                        String responseString = "";
+                        if (response != null) {
+                            responseString = String.valueOf(response.statusCode);
+                            // can get more details such as response.headers
+                        }
+                        return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
+                    }
+                };
+
+                requestQueue.add(stringRequest);
+
             }
         });
 

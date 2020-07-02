@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 
 import com.codeyard.aakraman3.constants.Constants;
 
-class InternetUtils {
+public class InternetUtils {
     public static int getConnectivityStatusString(Context context) {
         int status = Constants.NO_INFO;
         ConnectivityManager cm =

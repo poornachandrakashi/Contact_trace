@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
-            android:title="Home" />
+            android:title="@string/home" />
         <item
             android:id="@+id/nav_devices"
             android:icon="@drawable/ic_devices"
@@ -15,14 +15,17 @@
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_settings"
-            android:title="Settings" />
+            android:title="Testing" />
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/ic_call"
             android:title="Call Helpline (1075)" />
         <item
             android:id="@+id/login"
-            android:title="login now" />
+            android:title="Login" />
+        <item
+            android:id="@+id/testing"
+            android:title="Settings" />
     </group>
 
 </menu>

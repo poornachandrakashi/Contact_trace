@@ -13,7 +13,6 @@ import android.widget.EditText;
 import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.constants.ServerResponseConstants;
 import com.codeyard.aakraman3.models.AuthenticationModel;
-import com.codeyard.aakraman3.server.ServerClass;
 import com.codeyard.aakraman3.utils.JSONUtils;
 import com.codeyard.aakraman3.utils.Util;
 
@@ -87,9 +86,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new ServerClass().sendLogin(LoginActivity.this,
-                        email.getText().toString(),
-                        password.getText().toString());
+//                new ServerClass().sendLogin(LoginActivity.this,
+//                        email.getText().toString(),
+//                        password.getText().toString());
             }
         });
 
