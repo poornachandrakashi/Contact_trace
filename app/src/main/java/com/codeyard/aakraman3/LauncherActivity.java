@@ -8,6 +8,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.codeyard.aakraman3.constants.Constants;
+import com.codeyard.aakraman3.models.UserIDModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,27 +35,24 @@ public class LauncherActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                UserIDModel userIDModel = new UserIDModel(LauncherActivity.this);
-//
-//                String userID = userIDModel.getUserId();
-//                if (userID.equals("")) {
-//
-//                    startActivity(new Intent(
-//                            LauncherActivity.this,
-//                            SignUpActivity.class));
-//                    finish();
-//                } else {
-//                    startActivity(
-//                            new Intent(
-//                                    getApplicationContext(),
-//                                    MainActivity.class)
-//                    );
-//                    finish();
-//                }
-                startActivity(new Intent(LauncherActivity.this, SignUpActivity.class));
+                UserIDModel userIDModel = new UserIDModel(LauncherActivity.this);
+
+                String userID = userIDModel.getUserId();
+                if (userID.equals("")) {
+
+                    startActivity(new Intent(
+                            LauncherActivity.this,
+                            SignUpActivity.class));
+                    finish();
+                } else {
+                    startActivity(
+                            new Intent(
+                                    getApplicationContext(),
+                                    MainActivity.class)
+                    );
+                    finish();
+                }
             }
         }, Constants.SPLASH_SCREEN_TIMEOUT);
-
-
     }
 }

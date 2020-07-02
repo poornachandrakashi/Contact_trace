@@ -10,6 +10,10 @@ public class JSONUtils {
         jsonObject = new JSONObject((json));
     }
 
+    public JSONUtils(JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
+    }
+
     public String getKeyValuePair(String key) throws JSONException {
         return jsonObject.getString(key);
     }

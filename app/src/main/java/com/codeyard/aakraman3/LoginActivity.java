@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.constants.ServerResponseConstants;
 import com.codeyard.aakraman3.models.AuthenticationModel;
+import com.codeyard.aakraman3.server.ServerClass;
 import com.codeyard.aakraman3.utils.JSONUtils;
 import com.codeyard.aakraman3.utils.Util;
 
@@ -21,10 +22,9 @@ import org.json.JSONException;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
+    static Context context;
     EditText email, password;
     Button loginButton;
-    Context context;
-
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -60,6 +60,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    public static void showLoginAlert(String message) {
+        Util.showAlert(Util.createAlert(message, context));
+    }
+
+    public static void switchToMainActivity() {
+        context.startActivity(new Intent(context, MainActivity.class));
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -86,15 +94,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new ServerClass().sendLogin(LoginActivity.this,
-//                        email.getText().toString(),
-//                        password.getText().toString());
+                ServerClass.sendLoginData(
+                        context,
+                        email.getText().toString(),
+                        password.getText().toString());
             }
         });
 
-    }
-
-    public void switchToMainActivity() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 }

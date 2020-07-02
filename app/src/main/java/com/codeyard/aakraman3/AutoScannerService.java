@@ -10,6 +10,7 @@ import android.util.Log;
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
 import com.codeyard.aakraman3.models.UserIDModel;
+import com.codeyard.aakraman3.server.ServerClass;
 
 import java.util.Objects;
 
@@ -51,7 +52,7 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
         String myId = userIDModel.getUserId();
         String otherId = device.getName();
         String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
-
+        ServerClass.sendContactTraceData(context, myId, otherId, timestamp);
         Log.d(TAG, "onBleScan: scanned!!!!!! " + myId + " " + otherId + " " + timestamp);
     }
 
