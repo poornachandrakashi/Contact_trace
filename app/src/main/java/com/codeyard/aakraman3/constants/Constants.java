@@ -22,7 +22,7 @@ public class Constants {
     public static int SPLASH_SCREEN_TIMEOUT = 3000;
     public static String LOGIN_URL = "/api/login";
     public static String SIGNUP_URL = "/api/signup";
-    public static String CONTACT_URL = "/api/contact/secure";
+    public static String CONTACT_URL = "/api/contact";
 
 
 }

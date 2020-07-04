@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Intent startServiceIntent = new Intent(this, AutoScannerService.class);
         startService(startServiceIntent);
-        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
-        startService(startNotificationServiceIntent);
+//        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
+//        startService(startNotificationServiceIntent);
 
         NavigationView navigationView;
         Toolbar toolbar;
