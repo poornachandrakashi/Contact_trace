@@ -16,7 +16,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.models.UserIDModel;
 import com.codeyard.aakraman3.service.NotificationService;
 import com.codeyard.aakraman3.utils.BluetoothUtils;
@@ -113,15 +115,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView;
         Toolbar toolbar;
-        Button news, test, resource, map;
+        Button XRayTestButton, CoughTestButton, numDevicesButton;
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-        news = findViewById(R.id.news);
-        test = findViewById(R.id.test);
-        resource = findViewById(R.id.resource);
-        map = findViewById(R.id.map);
+        XRayTestButton = findViewById(R.id.xray_test);
+        CoughTestButton = findViewById(R.id.cough_test);
+        numDevicesButton = findViewById(R.id.num_device);
+
+        ImageView imageButton = findViewById(R.id.imageView);
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View c) {
+
+            }
+        });
         //Navigation Drawer
         setSupportActionBar(toolbar);
 
@@ -140,31 +150,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //On Click
 
-        news.setOnClickListener(new View.OnClickListener() {
+//        news.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, NewsActivity.class));
+//            }
+//        });
+//
+//        map.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, MapActivity.class));
+//            }
+//        });
+//
+//        resource.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, ResourcesActivity.class));
+//            }
+//        });
+
+        XRayTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewsActivity.class));
+                startActivity(new Intent(MainActivity.this, SelfTestActivity.class).putExtra("WHERE", Constants.AAKRAMAN_URL + Constants.XRAY_TEST_URL));
             }
         });
-
-        map.setOnClickListener(new View.OnClickListener() {
+        CoughTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MapActivity.class));
-            }
-        });
-
-        resource.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ResourcesActivity.class));
-            }
-        });
-
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SelfTestActivity.class));
+                startActivity(new Intent(MainActivity.this, SelfTestActivity.class).putExtra("WHERE", Constants.AAKRAMAN_URL + Constants.COUGH_TEST_URL));
             }
         });
 

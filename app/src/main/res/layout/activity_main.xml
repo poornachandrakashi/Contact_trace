@@ -24,7 +24,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="#f0f0f0"
             android:orientation="vertical">
 
@@ -40,61 +40,61 @@
                 app:srcCompat="@drawable/img1" />
 
             <Button
-                android:id="@+id/news"
+                android:id="@+id/xray_test"
                 android:layout_width="200dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/bg1"
                 android:fontFamily="serif-monospace"
-                android:text="News"
+                android:text="XRAY"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:textSize="22dp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/test"
+                android:id="@+id/cough_test"
                 android:layout_width="200dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/bg2"
                 android:fontFamily="serif-monospace"
-                android:text="Self Test"
+                android:text="COUGH Test"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:textSize="22dp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/resource"
+                android:id="@+id/num_device"
                 android:layout_width="200dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/bg3"
                 android:fontFamily="serif-monospace"
-                android:text="Resource"
+                android:text="Todya's Devices"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"
                 android:textSize="22dp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/map"
-                android:layout_width="200dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/bg4"
-                android:fontFamily="serif-monospace"
-                android:text="Map"
-                android:textAllCaps="false"
-                android:textColor="#ffffff"
-                android:textSize="22dp"
-                android:textStyle="bold" />
+            <!--            <Button-->
+            <!--                android:id="@+id/map"-->
+            <!--                android:layout_width="200dp"-->
+            <!--                android:layout_height="80dp"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginTop="30dp"-->
+            <!--                android:layout_marginBottom="25dp"-->
+            <!--                android:background="@drawable/bg4"-->
+            <!--                android:fontFamily="serif-monospace"-->
+            <!--                android:text="Map"-->
+            <!--                android:textAllCaps="false"-->
+            <!--                android:textColor="#ffffff"-->
+            <!--                android:textSize="22dp"-->
+            <!--                android:textStyle="bold" />-->
 
         </LinearLayout>
     </ScrollView>

@@ -26,7 +26,7 @@ import java.util.Map;
 import static com.codeyard.aakraman3.LoginActivity.switchToMainActivity;
 
 public class ServerClass {
-    private static final String AAKRAMAN_URL = "http://35.154.171.185:5000";
+    private static final String AAKRAMAN_URL = "http://www.akraman.team";
     private final static String TAG = ServerClass.class.getName();
     private static String LOGIN_URL = "/api/login";
     private static String SIGNUP_URL = "/api/signup";
@@ -100,17 +100,12 @@ public class ServerClass {
 
             @Override
             public Map<String, String> getHeaders() {
-                if (isAuthenticationRequired) {
                     Map<String, String> params = new HashMap<>();
                     AuthenticationModel authenticationModel = new AuthenticationModel(context);
-                    if (authenticationModel.getAuth().equals("")) {
-                        return null;
-                    }
 
                     params.put("Authorization", "Bearer " + authenticationModel.getAuth());
                     return params;
-                }
-                return null;
+
             }
         };
 

@@ -5,7 +5,10 @@ public class Constants {
     public static final int SCAN_PERIOD = 12000;
     public static final String USER_ID = "USER_ID";
     //URL
-    public static final String AAKRAMAN_URL = "http://www.akraman.team";
+    public static final String AAKRAMAN_URL = "www.akraman.team";
+    public static final String COUGH_TEST_URL = "/audio";
+    public static final String XRAY_TEST_URL = "/xray";
+
     //    Network
     public static final int WIFI = 1;
     public static final int MOBILE_DATA = 2;
