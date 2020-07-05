@@ -20,14 +20,16 @@ import com.codeyard.aakraman3.utils.JSONUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.codeyard.aakraman3.LoginActivity.switchToMainActivity;
 
 public class ServerClass {
     private static final String AAKRAMAN_URL = "http://35.154.171.185:5000";
-
+    private final static String TAG = ServerClass.class.getName();
     private static String LOGIN_URL = "/api/login";
     private static String SIGNUP_URL = "/api/signup";
-
     private String errorMessage = "";
 
     public ServerClass() {
@@ -43,7 +45,7 @@ public class ServerClass {
             jsonObject.put("username", username);
             jsonObject.put("password", password);
 
-            ServerClass.sendJSONToServer(context, AAKRAMAN_URL + Constants.SIGNUP_URL, jsonObject);
+            ServerClass.sendJSONToServer(context, AAKRAMAN_URL + Constants.SIGNUP_URL, jsonObject, false);
         } catch (JSONException e) {
             Log.e("TAG", "signUp: jse", e);
         }
@@ -58,7 +60,7 @@ public class ServerClass {
             jsonObject.put("email", email);
             jsonObject.put("password", password);
 
-            sendJSONToServer(context, AAKRAMAN_URL + LOGIN_URL, jsonObject);
+            sendJSONToServer(context, AAKRAMAN_URL + LOGIN_URL, jsonObject, false);
         } catch (JSONException e) {
             Log.e("TAG", "getLoginJSON: ", e);
         }
@@ -72,13 +74,13 @@ public class ServerClass {
             jsonObject.put("myId", myId);
             jsonObject.put("otherId", otherId);
             jsonObject.put("timestamp", timestamp);
-            sendJSONToServer(context, AAKRAMAN_URL + Constants.CONTACT_URL, jsonObject);
+            sendJSONToServer(context, AAKRAMAN_URL + Constants.CONTACT_URL, jsonObject, true);
         } catch (JSONException e) {
             Log.e("TAG", "getContactTraceJSON: ", e);
         }
     }
 
-    private static void sendJSONToServer(final Context context, final String URL, JSONObject jsonObject) {
+    private static void sendJSONToServer(final Context context, final String URL, JSONObject jsonObject, final boolean isAuthenticationRequired) {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjRequest = new JsonObjectRequest
@@ -94,7 +96,23 @@ public class ServerClass {
                             public void onErrorResponse(VolleyError error) {
                                 Log.e("TAG", "onErrorResponse: wtf", error);
                             }
-                        });
+                        }) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                if (isAuthenticationRequired) {
+                    Map<String, String> params = new HashMap<>();
+                    AuthenticationModel authenticationModel = new AuthenticationModel(context);
+                    if (authenticationModel.getAuth().equals("")) {
+                        return null;
+                    }
+
+                    params.put("Authorization", "Bearer " + authenticationModel.getAuth());
+                    return params;
+                }
+                return null;
+            }
+        };
 
         requestQueue.add(jsonObjRequest);
     }
@@ -112,7 +130,15 @@ public class ServerClass {
     }
 
     private static void handleContactResponse(JSONUtils jsonUtils, Context context) {
-//        Do check if some error try agian...
+        try {
+            String status = jsonUtils.getKeyValuePair(ServerResponseConstants.STATUS);
+            if (status.equals(ServerResponseConstants.OK)) {
+                return;
+
+            }
+        } catch (JSONException jse) {
+            Log.e(TAG, "handleContactResponse: ", jse);
+        }
     }
 
     public static void handleLogin(JSONUtils jsonUtils, Context context) {
@@ -138,7 +164,7 @@ public class ServerClass {
         }
     }
 
-    public static void handleSignUp(JSONUtils jsonUtils, Context context) {
+    private static void handleSignUp(JSONUtils jsonUtils, Context context) {
         try {
 
             String status = jsonUtils.getKeyValuePair(ServerResponseConstants.STATUS);

@@ -10,6 +10,7 @@ import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.codeyard.aakraman3.models.UserIDModel;
-import com.codeyard.aakraman3.service.NotificationService;
 import com.codeyard.aakraman3.utils.BluetoothUtils;
 import com.codeyard.aakraman3.utils.Util;
 import com.google.android.material.navigation.NavigationView;
@@ -31,6 +31,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    final String TAG = this.getClass().getName();
     private final int REQUEST_ENABLE_BT = 2;
     DrawerLayout drawerLayout;
     private BluetoothAdapter bluetoothAdapter;
@@ -52,11 +53,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             enableBluetooth();
         }
 
-        Intent i = getIntent();
         BluetoothUtils.setBluetoothName(bluetoothAdapter, new UserIDModel(this).getUserId());
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
         BluetoothLeAdvertiser advertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
+
+        bluetoothAdapter.getBluetoothLeAdvertiser().stopAdvertising(new AdvertiseCallback() {
+            @Override
+            public void onStartSuccess(AdvertiseSettings settingsInEffect) {
+                Log.e(TAG, "onStartSuccess: ");
+                super.onStartSuccess(settingsInEffect);
+            }
+
+            @Override
+            public void onStartFailure(int errorCode) {
+                Log.e(TAG, "onStartFailure: " + errorCode);
+                super.onStartFailure(errorCode);
+            }
+        });
 
         AdvertiseSettings settings = new AdvertiseSettings.Builder()
                 .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
@@ -83,7 +97,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         Intent startServiceIntent = new Intent(this, AutoScannerService.class);
-        startService(startServiceIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(startServiceIntent);
+        } else {
+            startService(startServiceIntent);
+        }
+
 //        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
 //        startService(startNotificationServiceIntent);
 

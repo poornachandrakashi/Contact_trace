@@ -1,9 +1,15 @@
 package com.codeyard.aakraman3;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -15,9 +21,10 @@ import com.codeyard.aakraman3.server.ServerClass;
 import java.util.Objects;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 public class AutoScannerService extends Service implements SimpleScanCallback {
-    private final String TAG = "TAG";
+    private final String TAG = AutoScannerService.class.getName();
     private Context context;
     private UserIDModel userIDModel;
     private BleScanner mBleScanner;
@@ -42,8 +49,30 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
         super.onCreate();
         context = this;
         Log.d(TAG, "onCreate: started");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager =
+                    (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            createChannel(notificationManager);
+            Notification notification = new NotificationCompat.Builder(this).setContentTitle("aakrmana").build();
+            startForeground(1, notification);
+
+        }
+
         userIDModel = new UserIDModel(context);
         startScan();
+    }
+
+    @TargetApi(26)
+    private void createChannel(NotificationManager notificationManager) {
+        String name = "Akkramana";
+        String description = "Notifications for akakrmamana status";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel mChannel = new NotificationChannel(name, name, importance);
+        mChannel.setDescription(description);
+        mChannel.enableLights(true);
+        mChannel.setLightColor(Color.BLUE);
+        notificationManager.createNotificationChannel(mChannel);
     }
 
     @Override
