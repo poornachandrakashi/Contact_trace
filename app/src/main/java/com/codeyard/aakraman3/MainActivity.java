@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.codeyard.aakraman3.models.UserIDModel;
+import com.codeyard.aakraman3.service.NotificationService;
 import com.codeyard.aakraman3.utils.BluetoothUtils;
 import com.codeyard.aakraman3.utils.Util;
 import com.google.android.material.navigation.NavigationView;
@@ -103,8 +104,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startService(startServiceIntent);
         }
 
-//        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
-//        startService(startNotificationServiceIntent);
+        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(startNotificationServiceIntent);
+        } else {
+            startService(startNotificationServiceIntent);
+        }
 
         NavigationView navigationView;
         Toolbar toolbar;
