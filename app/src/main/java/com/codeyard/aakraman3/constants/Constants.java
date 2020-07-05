@@ -5,7 +5,7 @@ public class Constants {
     public static final int SCAN_PERIOD = 12000;
     public static final String USER_ID = "USER_ID";
     //URL
-    public static final String AAKRAMAN_URL = "http://35.154.171.185:5000";
+    public static final String AAKRAMAN_URL = "http://www.akraman.team";
     //    Network
     public static final int WIFI = 1;
     public static final int MOBILE_DATA = 2;
@@ -22,7 +22,7 @@ public class Constants {
     public static int SPLASH_SCREEN_TIMEOUT = 3000;
     public static String LOGIN_URL = "/api/login";
     public static String SIGNUP_URL = "/api/signup";
-    public static String CONTACT_URL = "/api/contact";
+    public static String CONTACT_URL = "/api/contact/secure";
 
 
 }
