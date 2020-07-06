@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startService(startServiceIntent);
         }
 
-        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(startNotificationServiceIntent);
-        } else {
-            startService(startNotificationServiceIntent);
-        }
+//        Intent startNotificationServiceIntent = new Intent(this, NotificationService.class);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(startNotificationServiceIntent);
+//        } else {
+//            startService(startNotificationServiceIntent);
+//        }
 
         NavigationView navigationView;
         Toolbar toolbar;

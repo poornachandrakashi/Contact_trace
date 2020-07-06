@@ -36,6 +36,14 @@ public class SignUpActivity extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         password = findViewById(R.id.upassword);
 
+        findViewById(R.id.signupact_login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+            }
+        });
+
         signUp = findViewById(R.id.SignUp);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override

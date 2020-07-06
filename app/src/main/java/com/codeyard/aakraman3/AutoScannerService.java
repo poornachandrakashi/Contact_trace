@@ -13,12 +13,14 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.codeyard.aakraman3.constants.Constants;
 import com.codeyard.aakraman3.models.BleScanner;
 import com.codeyard.aakraman3.models.SimpleScanCallback;
 import com.codeyard.aakraman3.models.UserIDModel;
 import com.codeyard.aakraman3.server.ServerClass;
 
 import java.util.Objects;
+import java.util.Random;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -35,7 +37,7 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
         }
 
         mBleScanner.startBleScan(); // factory for scanner version
-        Objects.requireNonNull(context).startService(new Intent(context.getApplicationContext(), BroadcastService.class));
+        Objects.requireNonNull(context).startService(new Intent(context, BroadcastService.class));
     }
 
     @Nullable
@@ -54,7 +56,8 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
             NotificationManager notificationManager =
                     (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             createChannel(notificationManager);
-            Notification notification = new NotificationCompat.Builder(this).setContentTitle("aakrmana").build();
+            Notification notification = new NotificationCompat.Builder(this, Constants.CHANNEL_ID).setContentTitle("aakrmana").build();
+
             startForeground(1, notification);
 
         }
@@ -68,7 +71,7 @@ public class AutoScannerService extends Service implements SimpleScanCallback {
         String name = "Akkramana";
         String description = "Notifications for akakrmamana status";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel mChannel = new NotificationChannel(name, name, importance);
+        NotificationChannel mChannel = new NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_ID, importance);
         mChannel.setDescription(description);
         mChannel.enableLights(true);
         mChannel.setLightColor(Color.BLUE);

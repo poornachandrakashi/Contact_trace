@@ -27,5 +27,9 @@ public class Constants {
     public static String SIGNUP_URL = "/api/signup";
     public static String CONTACT_URL = "/api/contact/secure";
 
+    public static final String CHANNEL_ID = "akraman";
+    public static final int REQUEST_SELECT_FILE = 100;
+    public final static int FILECHOOSER_RESULTCODE = 1;
+
 
 }
